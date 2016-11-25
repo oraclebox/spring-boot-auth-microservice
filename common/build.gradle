@@ -6,6 +6,8 @@ apply plugin: 'java'
 
 sourceCompatibility = 1.7
 
+bootRepackage.enabled=false
+
 repositories {
     mavenCentral()
 }

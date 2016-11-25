@@ -37,7 +37,8 @@ repositories {
 dependencies {
     compile('org.codehaus.groovy:groovy-all:2.3.11')
     compile project(':common')
-    compile("org.springframework.cloud:spring-cloud-starter-zuul:${springBootVersion}")
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-zuul
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-zuul', version: '1.2.3.RELEASE'
     compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
     testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
 }
