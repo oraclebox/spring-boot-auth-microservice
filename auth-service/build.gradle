@@ -1,0 +1,56 @@
+buildscript {
+    ext {
+        springBootVersion = '1.4.2.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "io.spring.gradle:dependency-management-plugin:0.5.6.RELEASE"
+    }
+}
+
+
+allprojects {
+    apply plugin: 'groovy'
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: "io.spring.dependency-management"
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+jar {
+    baseName = 'auth-service'
+    version = '0.0.1-SNAPSHOT'
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.spring.io/snapshot" }
+    maven { url "https://repo.spring.io/milestone" }
+}
+
+dependencies {
+    compile project(':common')
+    compile('org.codehaus.groovy:groovy-all:2.3.11')
+    //compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: "${springBootVersion}"
+    compile("org.springframework.boot:spring-boot-starter:${springBootVersion}");
+    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-crypto
+    compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '4.2.0.RELEASE'
+    compile("org.springframework.boot:spring-boot-starter-redis:${springBootVersion}")
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-joda
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: '2.8.5'
+    // JWT
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.7.0'
+
+    testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}

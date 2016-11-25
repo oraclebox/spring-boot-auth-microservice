@@ -1,0 +1,32 @@
+server:
+  port: 9000
+  display-name: auth-service
+  compression:
+    enabled: off
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+  tomcat:
+    protocol_header: x-forwarded-proto
+  use-forward-headers: true
+spring:
+  application:
+    name: auth-service
+  # Database
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/oraclebox
+  # Redis
+  redis:
+    database: 2
+    host: localhost
+    port: 6379
+    #password:
+    timeout: 60000
+    pool:
+      max-active: 10
+      max-idle: 10
+      max-wait: -1
+      min-idle: 2
+application:
+  jwtTTL: 7776000000 #90 days (ms)
+  jwtPhase: 3182318hjbdqsugdusagvjcvuy*&@T*12tuGJDUYASGDUY
+  jwtIssuer: oraclebox
