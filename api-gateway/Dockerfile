@@ -6,4 +6,4 @@ COPY application.yml /application/application.yml
 WORKDIR /application
 ENTRYPOINT ["java","-jar"]
 CMD ["api-gateway.jar"]
-EXPOSE 9000
+EXPOSE 8888
