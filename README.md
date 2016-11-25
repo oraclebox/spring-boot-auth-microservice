@@ -44,14 +44,35 @@ Response will give you JWT token
 {
   "code": 200,
   "message": "Success",
-  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI5ZmM1NjM2ZC1mYTBmLTRjZmItYTc1Ny1jYTU2OWQwNTAyNWIiLCJpYXQiOjE0ODAwNjI1MzgsInN1YiI6IjU4MzdmNjEzMjVmNzEwNDA3MDg0YTEzZSIsImlzcyI6Im9yYWNsZWJveCIsImV4cCI6MTQ4NzgzODUzOH0.Ryys6NQVlWj44ESpcaTqA-l0c4XCdkyhEzQGRdr5Gqk",
+  "token": "{JWT token.....}",
   "data": {
     "id": "5837f61325f710407084a13e",
     "username": "Oraclebox",
     "email": "abc@gmail.com"
   }
 }
+```
 
+### Try to access private service
+GET http://localhost:8888/auth/private/v1/greeting with Header
 
+Authorization: Bearer {JWT token.....}
 
-``
+Return 200 if success, 403 if token invalid.
+
+## Add New API to getway which require token validation. 
+For example add http://localhost:9300/private/book/remove/{id}
+
+api-gateway > application.yml
+```
+zuul:
+  sensitiveHeaders: Authetication
+  routes:
+    auth: #authetication service
+      path: /auth/**
+      url: http://localhost:9000/auth
+    book: #authetication service
+      path: /private/book/**
+      url: http://localhost:9000/private/book      
+```
+
