@@ -33,7 +33,7 @@ class AuthController {
      * "email":"userABC@gmail.com",
      * "password":"312313123213123123213"
      *}*/
-    @RequestMapping(value = "/v1/continuous/username/password", method = RequestMethod.POST)
+    @RequestMapping(value = "/v1/continuous", method = RequestMethod.POST)
     ResponseEntity continuousByUsernameAndPassword(@RequestBody Map json) {
         Assert.isTrue(json != null && json.size() > 0, "Missing json.");
         Assert.isTrue(json.containsKey("username"), "Missing username.");
