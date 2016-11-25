@@ -32,7 +32,7 @@ cd auth-service
 chmod +x gradlew
 ./gradlew clean build
 docker build -t localhost/auth-service:latest .
-docker run --name auth-service -p 9000:9000 -d localhost/auth-service
+docker run -it --name auth-service -p 9000:9000 -d localhost/auth-service
 ```
 
 #### api-gateway
@@ -41,7 +41,7 @@ cd api-gateway
 chmod +x gradlew
 ./gradlew clean build
 docker build -t localhost/api-gateway:latest .
-docker run --name api-gateway -p 0.0.0.0:8888:8888 -d localhost/api-gateway
+docker run -it --name api-gateway -p 0.0.0.0:8888:8888 -d localhost/api-gateway
 ```
 
 ## Create account
