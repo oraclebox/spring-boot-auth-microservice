@@ -17,4 +17,4 @@ spring:
     name: api-gateway
 
 application:
-  authServiceUrl: http://localhost:9000/auth/v1/account
+  authServiceUrl: http://localhost:9000/auth/v1/me

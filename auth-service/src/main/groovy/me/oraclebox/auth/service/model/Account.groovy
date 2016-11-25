@@ -29,5 +29,7 @@ class Account {
     @JsonProperty("verified") // Email verification passed
     Boolean verified;
     @JsonIgnore
+    String via;
+    @JsonIgnore
     Map<String, Object> additionalProperties = new HashMap<String, Object>();
 }

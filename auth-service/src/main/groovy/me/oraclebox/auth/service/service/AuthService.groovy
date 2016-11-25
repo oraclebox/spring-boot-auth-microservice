@@ -131,6 +131,8 @@ class AuthServiceImpl implements AuthService {
         Account account = accountRepository.findOne(claims.getSubject());
         if (account == null)
             throw new AuthenticationException("Cannot find user account.");
+        if (!account.active)
+            throw new AuthenticationException("Account is inactivated.");
         return account;
     }
 }

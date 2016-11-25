@@ -55,9 +55,12 @@ class AuthController {
         }
         // Fist time sign up
         else {
-            account = service.save(new Account(username: json.get("username"),
+            account = service.save(new Account(
+                    username: json.get("username"),
+                    password: service.encryptPassword(json.get("password").toString()),
                     email: json.get("email"),
-                    password: service.encryptPassword(json.get("password").toString())));
+                    via: "username/password",
+                    active: true));
             jwt = service.generateJWT(account);
             //TODO Email verification
         }
@@ -68,7 +71,7 @@ class AuthController {
      * 請求標頭中取出JWT，驗証並在有效的情況下則返回帳戶資料
      * Validate JWT token in request header and return account if valid.
      */
-    @RequestMapping(value = "/v1/account", method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/me", method = RequestMethod.GET)
     ResponseEntity getAccount(HttpServletRequest request) {
         String token = getJWT(request);
         Account account = service.parseJWT(token);
