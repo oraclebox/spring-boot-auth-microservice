@@ -1,0 +1,20 @@
+server:
+  port: 8888
+  tomcat:
+    protocol_header: x-forwarded-proto
+  use-forward-headers: true
+zuul:
+  sensitiveHeaders: Authetication
+  routes:
+    auth: #authetication service
+      path: /auth/**
+      url: http://localhost:9000/auth
+ribbon:
+  eureka:
+    enabled: false
+spring:
+  application:
+    name: api-gateway
+
+application:
+  authServiceUrl: http://localhost:9000/auth/v1/account

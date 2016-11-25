@@ -1,4 +1,4 @@
-package me.oraclebox.auth.service.exception
+package me.oraclebox.exception
 
 class AuthenticationException extends Exception {
     AuthenticationException() {

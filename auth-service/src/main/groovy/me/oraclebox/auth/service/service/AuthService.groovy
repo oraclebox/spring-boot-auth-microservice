@@ -1,10 +1,10 @@
 package me.oraclebox.auth.service.service
 
 import io.jsonwebtoken.*
-import me.oraclebox.auth.service.exception.AuthenticationException
 import me.oraclebox.auth.service.model.Account
 import me.oraclebox.auth.service.model.AccountRepository
 import me.oraclebox.auth.service.property.ApplicationProperty
+import me.oraclebox.exception.AuthenticationException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.security.crypto.password.PasswordEncoder

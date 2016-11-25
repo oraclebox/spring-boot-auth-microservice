@@ -1,5 +1,6 @@
 package me.oraclebox.auth.service.exception
 
+import me.oraclebox.exception.AuthenticationException
 import me.oraclebox.http.ResultModel
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

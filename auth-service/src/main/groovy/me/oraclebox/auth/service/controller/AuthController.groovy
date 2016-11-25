@@ -1,8 +1,8 @@
 package me.oraclebox.auth.service.controller
 
-import me.oraclebox.auth.service.exception.AuthenticationException
 import me.oraclebox.auth.service.model.Account
 import me.oraclebox.auth.service.service.AuthService
+import me.oraclebox.exception.AuthenticationException
 import me.oraclebox.http.ResultModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest
  * Created by oraclebox@gmail.com on 11/25/2016.
  */
 @RestController
-@RequestMapping("/pub/auth")
+@RequestMapping("/auth")
 class AuthController {
 
     @Autowired
@@ -70,11 +70,21 @@ class AuthController {
      */
     @RequestMapping(value = "/v1/account", method = RequestMethod.GET)
     ResponseEntity getAccount(HttpServletRequest request) {
+        String token = getJWT(request);
+        Account account = service.parseJWT(token);
+        return new ResponseEntity<ResultModel<Account>>(ResultModel._200("Success", token, account), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/private/v1/greeting", method = RequestMethod.GET)
+    ResponseEntity greeting(HttpServletRequest request) {
+        return new ResponseEntity<ResultModel<Account>>(ResultModel._200("Success", "Hello World!!!"), HttpStatus.OK);
+    }
+
+    String getJWT(HttpServletRequest request) {
         final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             throw new AuthenticationException("Missing Authorization header and token.");
         }
-        Account account = service.parseJWT(authHeader.substring(7));
-        return new ResponseEntity<ResultModel<Account>>(ResultModel._200("Success", authHeader.substring(7), account), HttpStatus.OK);
+        return authHeader.substring(7);
     }
 }
