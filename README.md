@@ -68,12 +68,11 @@ Response will give you JWT token
 ```
 
 ### Try to access private service
-GET http://localhost:8888/auth/private/v1/greeting with Header
-
+```
+GET http://localhost:8888/auth/private/v1/greeting with HEARDER
 Authorization: Bearer {JWT token.....}
-
 Return 200 if success, 403 if token invalid.
-
+```
 ## Add New API to getway which require token validation. 
 For example add http://localhost:9300/book/private/remove/{id} and http://localhost:9300/book/list
 
@@ -90,7 +89,9 @@ zuul:
       url: http://localhost:9300/book      
 ```
 The can access them via API Gateway
+
 http://localhost:8888/book/private/remove/{id} (Require JWT header because url contain /private)
+
 http://localhost:8888/book/list
 
 
