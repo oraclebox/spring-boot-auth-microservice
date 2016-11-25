@@ -26,7 +26,7 @@ Reject all private APIs access if failed JWT validation.
  docker run --name redis -p 6379:6379 -d redis
 ```
 ### Start spring-boot service
-auth-service
+#### auth-service
 ```
 cd auth-service
 chmod +x gradlew
@@ -35,7 +35,7 @@ docker build -t localhost/auth-service:latest .
 docker run --name auth-service -p 9000:9000 -d localhost/auth-service
 ```
 
-api-gateway
+#### api-gateway
 ```
 cd api-gateway
 chmod +x gradlew
