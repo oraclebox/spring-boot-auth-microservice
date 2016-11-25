@@ -61,7 +61,7 @@ Authorization: Bearer {JWT token.....}
 Return 200 if success, 403 if token invalid.
 
 ## Add New API to getway which require token validation. 
-For example add http://localhost:9300/private/book/remove/{id}
+For example add http://localhost:9300/book/private/remove/{id} and http://localhost:9300/book/list
 
 api-gateway > application.yml
 ```
@@ -72,7 +72,11 @@ zuul:
       path: /auth/**
       url: http://localhost:9000/auth
     book: #authetication service
-      path: /private/book/**
-      url: http://localhost:9000/private/book      
+      path: /book/**
+      url: http://localhost:9300/book      
 ```
+The can access them via API Gateway
+http://localhost:8888/book/private/remove/{id} (Require JWT header because url contain /private)
+http://localhost:8888/book/list
+
 
