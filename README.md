@@ -43,7 +43,7 @@ docker build -t localhost/api-gateway:latest .
 docker run -it --name api-gateway -p 0.0.0.0:8888:8888 -d localhost/api-gateway
 ```
 
-## Create account
+## Create account by email
 POST http://localhost:8888/auth/v1/continuous with JSON
 ```
 {
@@ -62,6 +62,29 @@ Response will give you JWT token
     "id": "5837f61325f710407084a13e",
     "username": "Oraclebox",
     "email": "abc@gmail.com"
+  }
+}
+```
+
+## Create account via facebook
+POST http://localhost:8888/auth/v1/continuous/facebook with Facebook token get from mobile/website login.
+```
+{
+  "accessToken": "EAAIPVNssQLUBAPVvpaO1VuxmhCFErzEgKNhHp3Wb82qgWDa7CZBncdESEQWseqeqw3131ZAsjGnuuVmPaiZATZBtlZAZABpFxQEVQ0uvQclVGxCEPZAR2gU1sTsk7tLbdKK2P8TxHP551W92TYltcrnObZATxSW3123sdwe1MT8cIx7Os78TO52jELx0dnZBtmUuEZAUmfFAFYnwewQZewD"
+}
+```
+Response will give you JWT token and account
+```
+{
+  "code": 200,
+  "message": "Success",
+  "token": {token},
+  "data": {
+    "id": "58392ca031313712c88a0b84",
+    "email": "oraclebox@gmail.com",
+    "active": true,
+    "socialId": "10153213359378475",
+    "verified": true
   }
 }
 ```
