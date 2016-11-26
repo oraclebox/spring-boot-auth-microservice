@@ -5,6 +5,7 @@
 ### auth-service 服務負責
 ```
 使用EMAIL/密碼來創建新的帳戶。
+使用Facebook Token來創建新的帳戶。
 每次帳戶登入檢查密碼並產生新的JWT。
 容許其他服務驗證JWT真偽並返回帳戶信息。
 管理JWT的期限
