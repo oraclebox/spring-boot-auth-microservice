@@ -1,5 +1,6 @@
 # spring-auth-microservice
-[中文版本](README_CN.md)
+[中文版本](README_CN)
+
 Try implement authetication and api gateway microservices.
 
 ## Overview
