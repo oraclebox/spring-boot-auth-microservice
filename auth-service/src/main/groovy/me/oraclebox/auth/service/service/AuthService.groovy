@@ -4,11 +4,17 @@ import io.jsonwebtoken.*
 import me.oraclebox.auth.service.model.Account
 import me.oraclebox.auth.service.model.AccountRepository
 import me.oraclebox.auth.service.property.ApplicationProperty
+import me.oraclebox.auth.service.restrofit.FacebookService
+import me.oraclebox.auth.service.restrofit.ServiceFactory
 import me.oraclebox.exception.AuthenticationException
+import me.oraclebox.facebook.FacebookAccount
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import retrofit2.Call
+import retrofit2.Response
+import rx.Observable
 
 import javax.crypto.spec.SecretKeySpec
 import javax.xml.bind.DatatypeConverter
@@ -30,6 +36,10 @@ interface AuthService {
     String generateJWT(Account account);
 
     Account parseJWT(String token);
+    /**
+     * Call facebook graph API /me
+     */
+    Observable<FacebookAccount> facebookMe(String accessToken);
 }
 
 @Service
@@ -134,5 +144,13 @@ class AuthServiceImpl implements AuthService {
         if (!account.active)
             throw new AuthenticationException("Account is inactivated.");
         return account;
+    }
+
+    @Override
+    Observable<FacebookAccount> facebookMe(String accessToken) {
+        FacebookService service = ServiceFactory.createRetrofitService(FacebookService.class, FacebookService.ENDPOINT);
+        Call<FacebookAccount> call = service.me(FacebookService.ME_QUERY, accessToken);
+        Response<FacebookAccount> response = call.execute();
+        return Observable.just(response.body());
     }
 }

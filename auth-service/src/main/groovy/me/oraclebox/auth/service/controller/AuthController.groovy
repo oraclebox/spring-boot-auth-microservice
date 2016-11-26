@@ -3,6 +3,7 @@ package me.oraclebox.auth.service.controller
 import me.oraclebox.auth.service.model.Account
 import me.oraclebox.auth.service.service.AuthService
 import me.oraclebox.exception.AuthenticationException
+import me.oraclebox.facebook.FacebookAccount
 import me.oraclebox.http.ResultModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -67,6 +68,55 @@ class AuthController {
         return new ResponseEntity<ResultModel<Account>>(ResultModel._200("Success", jwt, account), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/v1/continuous/facebook", method = RequestMethod.POST)
+    ResponseEntity continuousFacebook(@RequestBody Map json) {
+        Assert.isTrue(json != null && json.size() > 0, "Missing json.");
+        Assert.isTrue(json.containsKey("accessToken"), "Missing facebook accessToken in json.");
+        String accessToken = (String) json.get("accessToken");
+
+        // Call facebook /me
+        FacebookAccount fbAccount = service.facebookMe(accessToken).toBlocking().first();
+
+        String jwt = null;
+        Account account = null;
+        // Find account with same username (Facebook uid)
+        if ((account = service.byUsername(fbAccount.id)) != null) {
+            jwt = service.generateJWT(account);
+        }
+        // First signup
+        else{
+            account = service.save(new Account(
+                    username: json.get("username"),
+                    password: service.encryptPassword(json.get("password").toString()),
+                    email: json.get("email"),
+                    via: "username/password",
+                    active: true));
+        };
+
+        Account account = service.getAccountRx(accessToken, facebookUser).toBlocking().single();
+
+        boolean isNewAccount = service.isNewFacebookAccountRx(facebookUser.id).toBlocking().single();
+
+        //TODO add friends to facebook friends list
+
+        if (!account.active) { // Account is inactive, unauthorized access
+            service.deleteJWT(account.jwtId);
+            return new ResponseEntity<ResultModel<Account>>(ResultModel.unauthorized("unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+
+        /**
+         * Create account for new user.
+         * Download user profile picture from facebook, create album and save photo to disk.
+         */
+        if (isNewAccount) {
+            service.saveAccount(account);
+            account.album.owner = account.id;
+            photoService.getPhotoFromFacebook(accessToken, account.album, account.id);
+        }
+
+        return new ResponseEntity<ResultModel<Account>>(
+                new ResultModel(ResultStatus.SUCCESS, "sign-in", account, service.renewJWT(account)), HttpStatus.OK);
+    }
     /**
      * 請求標頭中取出JWT，驗証並在有效的情況下則返回帳戶資料
      * Validate JWT token in request header and return account if valid.
