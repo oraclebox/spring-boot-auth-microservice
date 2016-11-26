@@ -8,4 +8,6 @@ import org.springframework.data.mongodb.repository.MongoRepository
  */
 interface AccountRepository extends MongoRepository<Account, String> {
     Account findByUsername(String username);
+    Account findByEmail(String email);
+    Account findBySocialId(String socialId);
 }

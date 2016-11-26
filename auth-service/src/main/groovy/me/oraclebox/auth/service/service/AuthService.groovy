@@ -25,7 +25,8 @@ import java.security.Key
  * Created by oraclebox on 11/25/2016.
  */
 interface AuthService {
-    Account byUsername(String username);
+    Account bySocialId(String socialId);
+    Account byEmail(String email);
 
     Account save(Account account);
 
@@ -55,8 +56,13 @@ class AuthServiceImpl implements AuthService {
     StringRedisTemplate redis;
 
     @Override
-    Account byUsername(String username) {
-        return accountRepository.findByUsername(username);
+    Account bySocialId(String socialId) {
+        return accountRepository.findBySocialId(socialId);
+    }
+
+    @Override
+    Account byEmail(String email) {
+        return accountRepository.findByEmail(email);
     }
 
     @Override

@@ -37,16 +37,15 @@ class AuthController {
     @RequestMapping(value = "/v1/continuous", method = RequestMethod.POST)
     ResponseEntity continuousByUsernameAndPassword(@RequestBody Map json) {
         Assert.isTrue(json != null && json.size() > 0, "Missing json.");
-        Assert.isTrue(json.containsKey("username"), "Missing username.");
         Assert.isTrue(json.containsKey("email"), "Missing email.");
         Assert.isTrue(json.containsKey("password"), "Missing password.");
 
-        String username = json.get("username").toString();
+        String email = json.get("email").toString();
         Account account = null;
         String jwt = null;
 
         // Find account with same username, check password
-        if ((account = service.byUsername(username)) != null) {
+        if ((account = service.byEmail(email)) != null) {
             // Validate
             if (service.validatePassword(json.get("password").toString(), account)) {
                 jwt = service.generateJWT(account);
@@ -59,8 +58,8 @@ class AuthController {
             account = service.save(new Account(
                     username: json.get("username"),
                     password: service.encryptPassword(json.get("password").toString()),
-                    email: json.get("email"),
-                    via: "username/password",
+                    email: email,
+                    via: ["email"],
                     active: true));
             jwt = service.generateJWT(account);
             //TODO Email verification
@@ -79,44 +78,30 @@ class AuthController {
 
         String jwt = null;
         Account account = null;
-        // Find account with same username (Facebook uid)
-        if ((account = service.byUsername(fbAccount.id)) != null) {
-            jwt = service.generateJWT(account);
+
+        // Find existing account registered by email, add facebook information
+        if ((account = service.byEmail(fbAccount.email)) != null && account.via == ["email"]) {
+            account.via.add("facebook");
+            account.socialId = fbAccount.id;
+            account.verified = true;
+            service.save(account);
         }
-        // First signup
-        else{
+        // Create an new account if cannot find via social account id.
+        else if ((account = service.bySocialId(fbAccount.id)) == null) {
             account = service.save(new Account(
-                    username: json.get("username"),
-                    password: service.encryptPassword(json.get("password").toString()),
-                    email: json.get("email"),
-                    via: "username/password",
+                    username: fbAccount.name,
+                    socialId: fbAccount.id,
+                    email: fbAccount.email,
+                    verified: true,
+                    via: ["facebook"],
                     active: true));
-        };
-
-        Account account = service.getAccountRx(accessToken, facebookUser).toBlocking().single();
-
-        boolean isNewAccount = service.isNewFacebookAccountRx(facebookUser.id).toBlocking().single();
-
-        //TODO add friends to facebook friends list
-
-        if (!account.active) { // Account is inactive, unauthorized access
-            service.deleteJWT(account.jwtId);
-            return new ResponseEntity<ResultModel<Account>>(ResultModel.unauthorized("unauthorized access", null), HttpStatus.UNAUTHORIZED);
         }
+        // Renew JWT token each time login
+        jwt = service.generateJWT(account);
 
-        /**
-         * Create account for new user.
-         * Download user profile picture from facebook, create album and save photo to disk.
-         */
-        if (isNewAccount) {
-            service.saveAccount(account);
-            account.album.owner = account.id;
-            photoService.getPhotoFromFacebook(accessToken, account.album, account.id);
-        }
-
-        return new ResponseEntity<ResultModel<Account>>(
-                new ResultModel(ResultStatus.SUCCESS, "sign-in", account, service.renewJWT(account)), HttpStatus.OK);
+        return new ResponseEntity<ResultModel<Account>>(ResultModel._200("Success", jwt, account), HttpStatus.OK);
     }
+
     /**
      * 請求標頭中取出JWT，驗証並在有效的情況下則返回帳戶資料
      * Validate JWT token in request header and return account if valid.

@@ -18,6 +18,8 @@ import org.springframework.data.mongodb.core.mapping.Document
 class Account {
     @JsonProperty("id")
     String id;
+    @JsonProperty("socialId")
+    String socialId;
     @JsonProperty("username")
     String username;
     @JsonProperty(value = "password", access = JsonProperty.Access.WRITE_ONLY)
@@ -29,7 +31,7 @@ class Account {
     @JsonProperty("verified") // Email verification passed
     Boolean verified;
     @JsonIgnore
-    String via;
+    List<String> via = [];
     @JsonIgnore
     Map<String, Object> additionalProperties = new HashMap<String, Object>();
 }
