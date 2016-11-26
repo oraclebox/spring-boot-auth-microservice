@@ -1,5 +1,5 @@
 # spring-auth-microservice
-Try implement authetication and api gateway microservices.
+嘗試實現用於RESTFUL風格的簡單身份驗證和api網關的微服務。
 
 ## Overview
 ### auth-service 服務負責
