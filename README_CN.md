@@ -16,7 +16,7 @@
 如果請求URL路徑包含** /private **，則在路由之前向auth-service請求驗證JWT。
 如果JWT驗證失敗，則拒絕API訪問。
 ```
-![overview](https://raw.githubusercontent.com/oraclebox/spring-auth-microservice/master/docs/overview.png)
+![overview](https://raw.githubusercontent.com/oraclebox/spring-auth-microservice/master/docs/spring-boot-auth-microservice-auth.png)
 
 ## 需要安裝的組件(以下經Docker安裝)
 ### Mongodb 
@@ -27,13 +27,21 @@
 ```
  docker run --name redis -p 6379:6379 -d redis
 ```
+### eureka-server
+```
+cd eureka-server
+chmod +x gradlew
+./gradlew clean build
+docker build -t localhost/eureka-server:latest .
+docker run -it --net=host --name eureka-server -p 8761:8761 -d localhost/eureka-server
+```
 ### auth-service
 ```
 cd auth-service
 chmod +x gradlew
 ./gradlew clean build
 docker build -t localhost/auth-service:latest .
-docker run -it --name auth-service -p 9000:9000 -d localhost/auth-service
+docker run -it --net=host --name auth-service -p 9000:9000 -d localhost/auth-service
 ```
 ### api-gateway
 ```
@@ -41,8 +49,10 @@ cd api-gateway
 chmod +x gradlew
 ./gradlew clean build
 docker build -t localhost/api-gateway:latest .
-docker run -it --name api-gateway -p 0.0.0.0:8888:8888 -d localhost/api-gateway
+docker run -it --net=host --name api-gateway -p 0.0.0.0:8888:8888 -d localhost/api-gateway
 ```
+
+
 
 ## API
 ### 用電子郵件創建帳戶
@@ -131,7 +141,7 @@ zuul:
   routes:
     auth: #authetication service
       path: /auth/**
-      url: http://localhost:9000/auth
+      serviceId: auth-serivce
     book: #authetication service
       path: /book/**
       url: http://localhost:9300/book      
@@ -142,4 +152,5 @@ http://localhost:8888/book/private/remove/{id} (因為路徑包括/private網關
 
 http://localhost:8888/book/list
 
+另如果book service 加入 Eureka DiscoveryClient，可以先向Eureka注冊自己，然后在api-gateway使用serviceId注冊服務。
 
