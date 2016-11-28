@@ -2,11 +2,11 @@ server:
   port: 9000
   display-name: auth-service
   compression:
-    enabled: off
+    enabled: on
     mime-types: application/json,application/xml,text/html,text/xml,text/plain
-  tomcat:
-    protocol_header: x-forwarded-proto
-  use-forward-headers: true
+#  tomcat:
+#    protocol_header: x-forwarded-proto
+#  use-forward-headers: true
 spring:
   application:
     name: auth-service
@@ -26,6 +26,15 @@ spring:
       max-idle: 10
       max-wait: -1
       min-idle: 2
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    leaseExpirationDurationInSeconds: 30
+    preferIpAddress: true
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
 application:
   jwtTTL: 7776000000 #90 days (ms)
   jwtPhase: 3182318hjbdqsugdusagvjcvuy*&@T*12tuGJDUYASGDUY

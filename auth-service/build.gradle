@@ -37,6 +37,7 @@ repositories {
 dependencies {
     compile project(':common')
     compile('org.codehaus.groovy:groovy-all:2.3.11')
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-eureka', version: '1.2.3.RELEASE'
     //compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: "${springBootVersion}"
     compile("org.springframework.boot:spring-boot-starter:${springBootVersion}");
