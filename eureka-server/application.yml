@@ -1,0 +1,19 @@
+server:
+  port: ${PORT:8761}
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    registerWithEureka: false
+  server:
+    # When eureka first starts up without peers it takes about 5 mins for it to start serving requests
+    # because it waits for all clients to register completely before it can give out the list. Disable it by set to 0
+    waitTimeInMsWhenSyncEmpty: 0
+    enableSelfPreservation: false
+    evictionIntervalTimerInMs: 6000
+logging:
+  level:
+    com:
+      netflix:
+        eureka: OFF
+        discovery: OFF

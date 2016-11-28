@@ -64,9 +64,11 @@ class JwtFilter extends ZuulFilter {
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Authorization", authHeader);
                 HttpEntity entity = new HttpEntity(headers);
+
                 HttpEntity<ResultModel> response = restTemplate.exchange(
                         property.authServiceUrl, HttpMethod.GET, entity, ResultModel.class);
             }catch(Exception e){
+                e.printStackTrace();
                 log.error("Cannot validate token: "+authHeader+" from "+property.authServiceUrl);
                 ctx.setSendZuulResponse(false);
                 ctx.setResponseStatusCode(403);

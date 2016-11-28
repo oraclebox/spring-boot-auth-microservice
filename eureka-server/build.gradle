@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.4.2.RELEASE'
+        springBootVersion = '1.4.3.BUILD-SNAPSHOT'
     }
     repositories {
         mavenCentral()
@@ -14,6 +14,7 @@ buildscript {
 }
 
 allprojects {
+    apply plugin: 'idea'
     apply plugin: 'groovy'
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
@@ -23,7 +24,7 @@ allprojects {
 
 
 jar {
-    baseName = 'api-gateway'
+    baseName = 'eureka-server'
     version = '0.0.1-SNAPSHOT'
 }
 
@@ -33,19 +34,15 @@ repositories {
     maven { url "https://repo.spring.io/milestone" }
 }
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Camden.BUILD-SNAPSHOT"
+    }
+}
 
 dependencies {
     compile('org.codehaus.groovy:groovy-all:2.3.11')
-    compile project(':common')
-    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-zuul
-    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-zuul', version: '1.2.3.RELEASE'
-    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-eureka', version: '1.2.3.RELEASE'
-    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
-    testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-eureka-server', version: '1.2.3.RELEASE'
+    testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
-//dependencyManagement {
-//    imports {
-//        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Camden.BUILD-SNAPSHOT"
-//    }
-//}
