@@ -15,7 +15,7 @@ Route all incoming messages to corresponing service.
 Validate JWT token if request url containing **/private**.
 Reject all private APIs access if failed JWT validation. 
 ```
-![overview](https://raw.githubusercontent.com/oraclebox/spring-auth-microservice/master/docs/overview.png)
+![overview](https://raw.githubusercontent.com/oraclebox/spring-auth-microservice/master/docs/spring-boot-auth-microservice-auth.png)
 
 ## Require Install 
 ### Mongodb 
